@@ -1,0 +1,285 @@
+https://randstuff.ru/number/
+
+
+
+1
+#include <stdio.h>
+#define N 50
+int main()
+{
+ int arr[N];
+ int s1 = 0,s2 = 0,min = 214748367 ,res = 0;
+ printf("Enter %d numbers >=0\n",N);
+ for(int i = 0; i < N; i++){
+    scanf("%d",&arr[i]);
+    if(arr[i]<0){
+        printf("Incorrect input");
+        return 0;
+    }
+ }
+ for(int i = 1; i < N-1; i++){
+    s1 = 0;
+    s2 = 0;
+    for(int j = 0; j < i; j++)
+        s1 = s1 + arr[j];
+    for(int k = i+1; k < N; k++)
+        s2 = s2 + arr[k];
+    if (min > abs(s1-s2)){
+        res = i;
+        min = abs(s1-s2);
+    }
+    printf("i = %d s1 = %d s2 = %d   %d\n",i,s1,s2,abs(s1-s2));
+    //printf("s1 - s2 = %d i = %d\n",abs(s1-s2),i);
+ }
+ printf("Result = %d",res);
+ return 0;
+}
+
+-----------------------------------------------------------------------------
+2
+#include <stdio.h>
+#include <stdlib.h>
+int main()
+{
+    //если нельзя использовать break сделай порядок цикла наоборот
+ double * arr;
+ int k = -1,N;
+ printf("Enter number of elements\n");
+ scanf("%d",&N);
+ arr = (double*)malloc(N*sizeof(double));
+ printf("Enter %d numbers \n",N);
+ for(int i = 0; i < N; i++)
+    scanf("%lf",&arr[i]);
+ for(int i = 0; i < N; i++)
+    if (arr[i]<0){
+        k = i;
+        break;
+    }
+ if (k != -1){
+ printf("First minus element index = %d\n",k);
+ for(int i = k; i < N - 1; i++) //сдвиг к началу массива
+    arr[i] = arr[i+1];
+
+ printf("Result:\n");
+ for(int i = 0; i < N - 1; i++)
+    printf("%lf\t",arr[i]);
+ return 0;
+ }
+ else{
+    for(int i = 0; i < N; i++)
+    printf("%8.2lf",arr[i]);
+ }
+ free(arr);
+ return 0;
+}
+
+
+
+------------------------------------------------------------------------------
+3
+#include <stdio.h>
+#define N 5
+#define M 2
+int main()
+{
+    printf("Matrix initialization, enter %d numbers\n",N*M);
+    double B[N][M]; //72 значения
+    double max;
+    int q;
+    for(int i = 0; i < N; i++)
+        for(int j = 0; j < M; j++)
+            scanf("%lf",&B[i][j]);
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < M; j++)
+            printf("%8.2lf",B[i][j]);
+        printf("\n");
+    }
+    for(int i = 0; i < N; i++){
+        max =  0;
+        q = 0;
+        for(int j = 0; j < M; j++){
+            if (fabs(B[i][j])>fabs(max))
+                max = B[i][j];
+        }
+        //printf("Max = %d\n",max);
+        for(int k = 0; k < M; k++)
+            if (B[i][k] == max)
+                q++;
+        if (q != M){
+            for(int e = 0; e < M; e++)
+            if  (B[i][e] == max)
+                B[i][e] = -1*B[i][e];
+        }
+    }
+    printf("\n\n\n");
+     for(int i = 0; i < N; i++){
+        for(int j = 0; j < M; j++)
+            printf("%8.2lf",B[i][j]);
+        printf("\n");
+    }
+    return 0;
+}
+
+------------------------------------------------------------------------
+4(1)
+#include <stdio.h>
+#define L 5
+#define H 4
+int main()
+{
+    double arr[H][L];
+    double tmp;
+    printf("Matrix initialization, enter %d numbers\n",H*L);
+    for(int i = 0; i < H; i++)
+        for(int j = 0; j < L; j++)
+            scanf("%lf",&arr[i][j]);
+    //
+    for(int i = 0; i < H; i++){
+        for(int j = 0; j < L; j++)
+            printf("%3.5lf",arr[i][j]);
+        printf("\n");
+    }
+    //
+    for(int i = 0; i < L; i++) // цикл по столбцам
+    {
+        for(int j = 0; j < H - 1; j++) // сортировка пузырьком 
+        {
+            for(int q = 0; q < H - j - 1; q++)
+            {
+               if(arr[q][i] > arr[q+1][i])
+               {
+                   tmp = arr[q][i];
+                   arr[q][i] = arr[q+1][i];
+                   arr[q+1][i] = tmp;
+               }
+            }
+        }
+    }
+    //
+    printf("Result:\n");
+    for(int i = 0; i < H; i++){
+        for(int j = 0; j < L; j++)
+            printf("%3.5lf",arr[i][j]);
+        printf("\n");
+    }
+    return 0;
+}
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+9 1 2 3 8 2 3 4 7 4 5 6 10 1 2 3 5 4 4 1
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+4(2)
+#include <stdio.h>
+#include <stdlib.h>
+int main()
+{
+    double **arr;//H L m n
+    double tmp;
+    int m,n,i,j,k;
+    printf("Enter number of strings\n");
+    scanf("%d",&m);
+    printf("Enter number of columns\n");
+    scanf("%d",&n);
+    //arr = (double*)malloc(H*L*sizeof(double));
+    arr = calloc(m, sizeof(double*));
+    if(arr == NULL){
+        printf("Memory error");
+        return 0;
+    }
+    arr[0] = calloc(m*n,sizeof(double));
+    if(arr[0] == NULL){
+        free(arr);
+        printf("Memory error");
+        return 0;
+    }
+    for(i = 1; i < m; i++)
+        arr[i] = arr[i-1]+n;
+    printf("Matrix initialization, enter %d numbers\n",m*n);
+    for(i = 0; i < m; i++)
+        for(j = 0; j < n; j++)
+            scanf("%lf",&arr[i][j]);
+    //
+    for(i = 0; i < m; i++){
+        for(j = 0; j < n; j++)
+            printf("%8.2lf",arr[i][j]);
+        printf("\n");
+    }
+    //
+    for(int i = 0; i < n; i++) // цикл по столбцам
+    {
+        for(int j = 0; j < m - 1; j++) // сортировка пузырьком
+        {
+            for(int q = 0; q < m - j - 1; q++)
+            {
+               if(arr[q][i] > arr[q+1][i])
+               {
+                   tmp = arr[q][i];
+                   arr[q][i] = arr[q+1][i];
+                   arr[q+1][i] = tmp;
+               }
+            }
+        }
+    }
+    //
+    printf("Result:\n");
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++)
+            printf("%8.2lf",arr[i][j]);
+        printf("\n");
+    }
+    free(arr);
+    return 0;
+}
+
+----------------------------------------------------------------
+5
+#include <stdio.h>
+#include <stdlib.h>
+#define M 5
+#define N 6
+#define K 6
+#define F 2
+int main()
+{
+ int arr[M][N][K][F];
+ int rn,counter = 0,damaged = 0;
+ double res;
+ for(int m = 0; m < M; m++)
+    for(int n = 0; n < N; n++)
+        for(int k = 0; k < K; k++)
+            for(int f = 0; f < F; f++){
+                rn = rand();
+                if (rn %2 == 1)
+                    arr[m][n][k][f] = 1;
+                else
+                    arr[m][n][k][f] = 0;
+ }
+ //Попробуй сделать вывод массива
+ for(int f = 0; f < F; f++){
+    printf("Stack %d\n",f+1);
+    for(int n = 0; n < N; n++){
+        for(int m = 0; m < M; m++){
+            for(int k = 0; k < K; k++)
+                printf("%3d",arr[m][n][k][f]);
+        printf("\n");
+        }
+        printf("\n");
+    }
+    printf("\n");
+ }
+ //
+ printf("\n\n");
+ for(int f = 0; f < F; f++)
+    for(int n = 0; n < N; n++)
+        for(int m = 0; m < M; m++)
+            for(int k = 0; k < K; k++)
+                if(arr[m][n][k][f] == 0){
+                    damaged++;
+                    printf("Stack %d, Tray %d, String %d, Column %d\n",f+1,n+1,m+1,k+1);
+                }
+res = (double)damaged/360*100;
+printf("Number of eggs 360, damaged %d, percent of damaged %.3lf",damaged,res);
+ return 0;
+}
+
+
+
